@@ -25,6 +25,12 @@ export class Report {
   @Column({ type: 'boolean', default: false })
   isResolved: boolean;
 
+  @Column({ type: 'text', nullable: true })
+  photoUrl: string;
+
+  @Column({ type: 'text', nullable: true })
+  repairPhotoUrl: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 }
