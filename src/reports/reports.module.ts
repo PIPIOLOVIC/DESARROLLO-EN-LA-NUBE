@@ -5,11 +5,13 @@ import { ReportsRepository } from './repositories/reports.repository';
 import { ReportsService } from './reports.service';
 import { ReportsController } from './reports.controller';
 import { EmailModule } from '../email/email.module';
+import { StorageModule } from '../storage/storage.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Report]),
-    EmailModule, // Para inyectar EmailService
+    EmailModule,
+    StorageModule,
   ],
   controllers: [ReportsController],
   providers: [ReportsService, ReportsRepository],

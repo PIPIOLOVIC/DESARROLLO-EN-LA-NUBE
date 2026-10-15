@@ -5,7 +5,10 @@ export interface ReportTemplateDto {
   reporterPhone: string;
 }
 
-export function generateReportTemplate(dto: ReportTemplateDto): string {
+export function generateReportTemplate(
+  dto: ReportTemplateDto,
+  photoUrl?: string,
+): string {
   const colors: Record<string, string> = {
     low: '#28a745',
     medium: '#ffc107',
@@ -13,6 +16,20 @@ export function generateReportTemplate(dto: ReportTemplateDto): string {
   };
 
   const severityColor = colors[dto.severity.toLowerCase()] || '#0077b6';
+
+  const photoSection = photoUrl
+    ? `
+        <tr>
+          <td style="padding: 16px 24px 0;">
+            <p style="font-weight: bold; color: #4a5568; margin: 0 0 8px;">📷 Foto de la fuga:</p>
+            <img
+              src="${photoUrl}"
+              alt="Foto de la fuga de agua"
+              style="max-width: 100%; border-radius: 6px; border: 1px solid #e2e8f0;"
+            />
+          </td>
+        </tr>`
+    : '';
 
   return `
     <!DOCTYPE html>
@@ -61,6 +78,7 @@ export function generateReportTemplate(dto: ReportTemplateDto): string {
             </table>
           </td>
         </tr>
+        ${photoSection}
         <tr>
           <td style="background-color: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #718096; border-top: 1px solid #e2e8f0;">
             Sistema Municipal de Agua y Saneamiento &bull; Cuadrilla de Mantenimiento
