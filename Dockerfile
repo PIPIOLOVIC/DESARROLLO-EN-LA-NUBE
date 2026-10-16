@@ -1,20 +1,24 @@
-# Etapa de desarrollo para NestJS v11
-FROM node:20-alpine
+# ── Etapa 1: build ──────────────────────────────────────────────────────────
+FROM node:22-alpine AS builder
 
-# Directorio de trabajo en el contenedor
 WORKDIR /usr/src/app
 
-# Copiar archivos de definición de dependencias
 COPY package*.json ./
+RUN npm ci --only=production=false
 
-# Instalar dependencias
-RUN npm install
-
-# Copiar el resto del código de la aplicación
 COPY . .
+RUN npm run build
 
-# Exponer el puerto de la aplicación
+# ── Etapa 2: producción ──────────────────────────────────────────────────────
+FROM node:22-alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY --from=builder /usr/src/app/dist ./dist
+
 EXPOSE 3000
 
-# Comando para iniciar la aplicación en modo desarrollo con recarga en caliente
-CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/main"]
